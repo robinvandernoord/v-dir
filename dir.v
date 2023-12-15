@@ -120,7 +120,7 @@ fn properties_(obj reflection.TypeSymbol) []string {
 /* Get a list of all public properties of an object.
 * The items are sorted alphabetically.
 */
-pub fn properties(object reflection.TypeSymbol) []string {
+pub fn properties[T](object T) []string {
 	info := reflection.type_of(object)
 	return properties_(info.sym)
 }

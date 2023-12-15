@@ -1,4 +1,6 @@
-import dir
+module dir
+
+import arrays
 
 struct Example {
 	property int
@@ -12,34 +14,42 @@ fn (e &Example) method_two() {}
 fn (mut e Example) method_three() {}
 
 fn test_struct() {
+	example := Example{}
+
 	required := ['method_one', 'method_three', 'method_two', 'method_zero', 'property']
-	assert dir.dir(Example{}) == required
+	dir_output := dir(example)
+	assert dir_output == required
+
+	mut combined := arrays.merge(properties(example), methods(example))
+	combined.sort()
+
+	assert combined == dir_output
 }
 
 fn test_builtins() {
-	assert dir.dir('string').len > 0
-	assert dir.dir(123).len > 0
-	assert dir.dir(123.456).len > 0
-	assert dir.dir(true).len > 0
+	assert dir('string').len > 0
+	assert dir(123).len > 0
+	assert dir(123.456).len > 0
+	assert dir(true).len > 0
 }
 
 fn test_array() {
 	dynamic := []string{}
-	assert dir.dir(dynamic).len > 0
+	assert dir(dynamic).len > 0
 
 	fixed := [3]int{}
-	assert dir.dir(fixed).len > 0
+	assert dir(fixed).len > 0
 
-	assert dir.dir(dynamic) != dir.dir(fixed)
+	assert dir(dynamic) != dir(fixed)
 }
 
 fn test_map() {
 	my_map := map[int]string{}
-	assert dir.dir(my_map).len > 0
+	assert dir(my_map).len > 0
 }
 
 fn test_function() {
-	assert dir.dir(test_function).len == 0
+	assert dir(test_function).len == 0
 }
 
 enum TestEnum {
@@ -47,7 +57,7 @@ enum TestEnum {
 }
 
 fn test_enum() {
-	assert dir.dir(TestEnum.first).len == 0
+	assert dir(TestEnum.first).len == 0
 }
 
 type NewType = string
@@ -55,7 +65,7 @@ type NewType = string
 fn test_alias() {
 	aliased := NewType('hi')
 
-	assert 'len' in dir.dir(aliased)
+	assert 'len' in dir(aliased)
 }
 
 interface MyInterface {
@@ -76,7 +86,7 @@ fn test_interface() {
 
 	list_of_interface << Impl{'something', 123}
 
-	list := dir.dir(list_of_interface[0])
+	list := dir(list_of_interface[0])
 
 	assert 'public' in list
 	assert 'first_method' in list
@@ -105,7 +115,7 @@ type SomeSum = SumFirst | SumSecond
 fn test_sumtype() {
 	summed := SomeSum(SumFirst{1, 2})
 
-	list := dir.dir(summed)
+	list := dir(summed)
 
 	assert 'first' in list
 	assert 'second' !in list
@@ -121,5 +131,5 @@ fn this_multireturns() (string, int) {
 }
 
 fn test_multireturn() {
-	assert dir.dir(this_multireturns()) == []
+	assert dir(this_multireturns()) == []
 }

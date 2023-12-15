@@ -22,6 +22,7 @@ import robinvandernoord.dir
 
 The primary method to inspect any object is `dir.dir()`. It returns a sorted list of all public methods and properties
 of the provided object.
+You can also use `dir.properties()` and `dir.methods()` to get respectively all properties and methods of an object.
 
 ```v
 dir.dir[T](object T) []string
@@ -50,6 +51,9 @@ fn main() {
 	dir_output := dir.dir(person) // []string
 
 	println(dir_output) // ['age', 'birth_year', 'name']
+
+	println(dir.properties(person)) // ['birth_year', 'name']
+	println(dir.methods(person)) // ['age']
 }
 ```
 
